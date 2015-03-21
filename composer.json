@@ -1,0 +1,21 @@
+{
+  "name": "vazmer/media",
+  "description": "Media",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Bojan Vazmer",
+      "email": "vazmer@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "illuminate/support": "~5.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Vazmer\\Media\\": "src/"
+    }
+  },
+  "minimum-stability": "dev"
+}
