@@ -19,7 +19,7 @@ trait MediaTrait{
 
 	public function getMedia($fieldName)
 	{
-		if(empty($this->media_fields[$fieldName]))
+		if(!in_array($fieldName, $this->media_fields))
 		{
 			return null;
 		}
@@ -38,16 +38,23 @@ trait MediaTrait{
 			return false;
 		}
 
-		foreach($this->media_fields as $fieldName => $fieldType)
+		foreach($this->media_fields as $fieldName)
 		{
-			if(empty($this->media_fields[$fieldName]) || !is_object($this->getRequestFile($fieldName)))
+			if(empty($this->media_fields) || !in_array($fieldName, $this->media_fields))
 			{
 				continue;
 			}
 
-			if($fieldType == 'single')
+			$requestFiles = $this->getRequestFile($fieldName);
+
+			if(is_object($requestFiles))
 			{
-				$file = new File($this->getRequestFile($fieldName));
+				$requestFiles = [$requestFiles];
+			}
+
+			foreach($requestFiles as $rFile){
+				$file = new File($rFile);
+
 				if(!$file->uploadSingle()) continue;
 
 				$this->saveSingle($file, $fieldName);
@@ -68,7 +75,7 @@ trait MediaTrait{
 
 		return $media->save();
 	}
-	
+
 
 	/**
 	 * Get where array
