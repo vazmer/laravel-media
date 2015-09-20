@@ -9,24 +9,6 @@ use Vazmer\Media\File;
 trait MediaTrait{
 
 	/**
-	 * Media items
-	 */
-	public function media()
-	{
-		return $this->morphMany('Vazmer\Media\Media', 'media');
-	}
-
-
-	public function getMedia($fieldName)
-	{
-		if(!in_array($fieldName, $this->media_fields))
-		{
-			return null;
-		}
-		return $this->media()->where($this->getWhereArray($fieldName))->first();
-	}
-
-	/**
 	 * Upload
 	 *
 	 * @return bool
@@ -40,11 +22,6 @@ trait MediaTrait{
 
 		foreach($this->media_fields as $fieldName)
 		{
-			if(empty($this->media_fields) || !in_array($fieldName, $this->media_fields))
-			{
-				continue;
-			}
-
 			$requestFiles = $this->getRequestFile($fieldName);
 
 			if(is_object($requestFiles))
@@ -57,16 +34,16 @@ trait MediaTrait{
 
 				if(!$file->uploadSingle()) continue;
 
-				$this->saveSingle($file, $fieldName);
+				$this->saveSingle($file);
 			}
 		}
 
 		return true;
 	}
 
-	protected function saveSingle(File $file, $fieldName)
+	protected function saveSingle(File $file)
 	{
-		$media = $this->media()->firstOrCreate($this->getWhereArray($fieldName));
+		$media = $this->media()->create();
 
 		$media->file_name = $file->getFilename();
 		$media->file_size = $file->getSize();
@@ -78,21 +55,9 @@ trait MediaTrait{
 
 
 	/**
-	 * Get where array
-	 *
-	 * @return array
-	 */
-	private function getWhereArray($fieldName)
-	{
-		return array(
-			'media_id' => $this->id,
-			'media_type' => get_class($this),
-			'field_name' => $fieldName
-		);
-	}
-
-	/**
 	 * Get requested file
+	 *
+	 * @param $fieldName
 	 *
 	 * @return array|UploadedFile
 	 */
@@ -100,7 +65,4 @@ trait MediaTrait{
 	{
 		return \Request::file($fieldName);
 	}
-
-
-
 }
