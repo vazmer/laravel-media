@@ -43,14 +43,12 @@ trait MediaTrait{
 
 	protected function saveSingle(File $file)
 	{
-		$media = $this->media()->create();
+		$this->file_name = $file->getFilename();
+		$this->file_size = $file->getSize();
+		$this->file_path = $file->getFullPath();
+		$this->file_mime_type = $file->getMimeType();
 
-		$media->file_name = $file->getFilename();
-		$media->file_size = $file->getSize();
-		$media->file_path = $file->getFullPath();
-		$media->file_mime_type = $file->getMimeType();
-
-		return $media->save();
+		return $this->save();
 	}
 
 

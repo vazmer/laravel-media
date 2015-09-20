@@ -1,18 +1,36 @@
-<?php namespace Vazmer\Media;
+<?php
+
+namespace Vazmer\Media;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Media extends Model{
+use Vazmer\Media\MediaTrait;
 
-	protected $fillable = ['field_name', 'file_name', 'file_path', 'file_size', 'file_mime_type'];
+/**
+ * Vazmer\Media\Media
+ */
+class Media extends Model
+{
+	use MediaTrait;
 
 	/**
-	 * Get all related media files
+	 * The database table used by the model.
 	 *
-	 * @return mixed
+	 * @var string
 	 */
-	public function media(){
-		return $this->morphTo();
-	}
+	protected $table = 'media';
 
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = ['file_name', 'file_path', 'file_size', 'file_mime_type'];
+
+	/**
+	 * Media fields
+	 *
+	 * @var array
+	 */
+	protected $media_fields = ['file'];
 }
